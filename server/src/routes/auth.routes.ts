@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/auth.controller.js";
-import { AuthRepository } from "../modules/auth/auth.repository.js";
-import { AuthService } from "../modules/auth/auth.service.js";
-import { loginSchema, registerSchema } from "../modules/auth/auth.dto.js";
 import { validate } from "../middleware/validate.middleware.js";
 import { authRateLimiter } from "../middleware/rate-limit.middleware.js";
+import { AuthRepository } from "../modules/repository/auth.repository.js";
+import { AuthService } from "../modules/services/auth.service.js";
+import { loginSchema, registerSchema } from "../modules/dto/auth.dto.js";
 
 const authRepository = new AuthRepository();
 const authService = new AuthService(authRepository);
