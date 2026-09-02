@@ -3,22 +3,22 @@ import { ZodError } from "zod";
 import { AppError } from "../shared/errors/app-error.js";
 import { logger } from "../utils/logger.js";
 
-export function errorHandle(err: unknown, req: Request, res: Response, _next: NextFunction) {
+export function errorHandler(err: unknown, req: Request, res: Response, _next: NextFunction) {
   if (err instanceof ZodError) {
     return res.status(400).json({
       success: false,
       error: {
         code: "VALIDATION_ERROR",
         message: "Request validation failed",
-        details: err.flatten().fieldErrors,
+        details: err.flatten()
       }
     })
   }
 
   if (err instanceof AppError) {
-    if (err.statusCode >= 500) {
-      logger.error({ stack: err.stack, path: req.path }, err.message);
-    }
+    // if (err.statusCode >= 500) {
+    //   logger.error({ stack: err.stack, path: req.path }, err.message);
+    // }
     return res.status(err.statusCode).json({
       success: false,
       error: {

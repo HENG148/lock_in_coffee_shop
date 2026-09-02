@@ -4,12 +4,13 @@ import crypto from "node:crypto"
 
 export interface AccessTokenPayload {
   sub: string;
-  role: "admin" | "manager" | "cashier" | "barista";
+  // role: "admin" | "manager" | "cashier" | "barista";
+  role: "admin" | "manager" | "cashier";
 }
 
 export function signAccessToken(payload: AccessTokenPayload): string{
   const options: jwt.SignOptions = {
-  expiresIn: (env.ACCESS_TOKEN_TTL ?? "15m") as NonNullable<jwt.SignOptions["expiresIn"]>,
+    expiresIn: (env.ACCESS_TOKEN_TTL ?? "15m") as NonNullable<jwt.SignOptions["expiresIn"]>,
   };
   return jwt.sign(payload, env.JWT_ACCESS_SECRET, options);
 }

@@ -1,25 +1,26 @@
 import bcrypt from "bcryptjs";
-import { AuthRepository } from "../modules/auth/auth.repository.js";
-import { AuthService } from "../modules/auth/auth.service.js";
 import { ConflictError } from "../shared/errors/app-error.js";
+import { AuthRepository } from "../modules/repository/auth.repository.js";
+import { AuthService } from "../modules/services/auth.service.js";
+import { beforeEach, describe, expect, it, vi, type Mocked } from 'vitest';
 
-jest.mock("../modules/auth/auth.repository.js");
+vi.mock("../modules/repository/auth.repository.js");
 
-const MockedAuthRepository = AuthRepository as jest.MockedClass<typeof AuthRepository>;
+const MockedAuthRepository = AuthRepository as unknown as ReturnType<typeof vi.fn>
 
 describe("AuthService", () => {
-  let repository: jest.Mocked<AuthRepository>;
+  let repository: Mocked<AuthRepository>;
   let service: AuthService;
 
   beforeEach(() => {
     MockedAuthRepository.mockClear();
-    repository = new MockedAuthRepository() as jest.Mocked<AuthRepository>;
+    repository = new MockedAuthRepository() as Mocked<AuthRepository>;
     service = new AuthService(repository);
   });
 
   describe("register", () => {
     it("throws ConflictError when email is already taken", async () => {
-      repository.findUserByEmail.mockRejectedValue({
+      repository.findUserByEmail.mockResolvedValue({
         id: "1",
         email: "taken@shop.com"
       } as any);
@@ -33,7 +34,7 @@ describe("AuthService", () => {
       ).rejects.toThrow(ConflictError);
     });
 
-    it("hashes the passwrod and default role to cashier", async () => {
+    it("hashes the password and default role to cashier", async () => {
       repository.findUserByEmail.mockResolvedValue(undefined);
       repository.createUser.mockImplementation(async (data) => ({
         id: 'new-id',

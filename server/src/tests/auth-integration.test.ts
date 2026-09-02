@@ -1,7 +1,8 @@
+import { describe, expect, it } from "vitest";
 import { App } from "../app.js";
 import request from 'supertest'
 
-const app = App;
+const app = App();
 
 describe("POST /api/v1/auth/register", () => {
   it("return 201 and tokens for a valid new registration", async () => {
@@ -57,7 +58,7 @@ describe("POST /api/v1/auth/login", () => {
       .post("/api/v1/auth/login")
       .send({ email: "nobody@shop.com", password: "whatever123" });
     expect(res.status).toBe(401)
-    expect(res.body.errror.message).toBe("Invalid email or password");
+    expect(res.body.error.message).toBe("Invalid email or password");
   })
 });
 
