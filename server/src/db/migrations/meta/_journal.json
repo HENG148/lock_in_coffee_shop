@@ -15,6 +15,20 @@
       "when": 1788316353132,
       "tag": "0001_boring_frank_castle",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788409816853,
+      "tag": "0002_giant_crusher_hogan",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788508596404,
+      "tag": "0003_real_terrax",
+      "breakpoints": true
     }
   ]
 }

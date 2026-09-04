@@ -2,3 +2,9 @@ export * from "./users.schema.js"
 export * from "./refresh-tokens.js"
 export * from "./categories.schema.js"
 export * from "./products.schema.js"
+export * from "./variant-group.schema.js";
+export * from "./variant-options.schema.js";
+export * from "./products-variant-group.schema.js"
+export * from "./addons.schema.js";
+export * from "./products-addons.schema.js";
+// export * from "./"

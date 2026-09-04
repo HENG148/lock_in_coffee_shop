@@ -1,6 +1,9 @@
 import { boolean, index, integer, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { categories } from "./categories.schema.js";
 import { relations } from "drizzle-orm";
+import { productVariantGroups } from "./products-variant-group.schema.js";
+import { variantGroup } from "./variant-group.schema.js";
+import { productAddons } from "./products-addons.schema.js";
 
 export const products = pgTable("products", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -21,11 +24,13 @@ export const products = pgTable("products", {
   })
 );
 
-export const productsRelations = relations(products, ({ one }) => ({
+export const productsRelations = relations(products, ({ one, many }) => ({
   categories: one(categories, {
     fields: [products.categoryId],
     references: [categories.id]
-  })
+  }),
+  variantGroupLink: many(productVariantGroups),
+  addonLink: many(productAddons)
 }))
 
 export type Product = typeof products.$inferSelect;

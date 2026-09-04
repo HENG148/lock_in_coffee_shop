@@ -6,7 +6,7 @@ export const categories = pgTable("category", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", { length: 100 }).notNull().unique(),
   description: varchar('descriptio', { length: 500 }),
-  mageUrl: varchar('image_url', { length: 500 }),
+  imageUrl: varchar('image_url', { length: 500 }),
   sortOrder: integer('sort_order').notNull().default(0),
   isActive: boolean('is_active').notNull().default(true),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),

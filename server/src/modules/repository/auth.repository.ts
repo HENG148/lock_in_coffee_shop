@@ -2,9 +2,10 @@ import { and, eq, isNull } from "drizzle-orm";
 import { db } from "../../db/client.js";
 import { users, type NewUser } from "../../db/schema/users.schema.js";
 import { refreshTokens } from "../../db/schema/refresh-tokens.js";
-import { UnauthorizedError } from "../../shared/errors/app-error.js";
 
-type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+type TransactionCallback = Parameters<typeof db.transaction>[0];
+type Tx = Parameters<TransactionCallback>[0];
+type Executor = typeof db | Tx;
 
 export class AuthRepository {
   async findUserByEmail(email: string) {
@@ -45,34 +46,10 @@ export class AuthRepository {
       .where(eq(refreshTokens.tokenHash, tokenHash));
   }
 
-  async revokeAllUserTokens(userId: string, tx: DbTransaction | typeof db = db) {
-    await db
+  async revokeAllUserTokens(userId: string, executor: Executor = db) {
+    await executor
       .update(refreshTokens)
       .set({ revokedAt: new Date() })
       .where(and(eq(refreshTokens.userId, userId), isNull(refreshTokens.revokedAt)));
-  }
-
-  async rotateRefreshToken(oldTokenHash: string, newToken: {
-    tokenHash: string;
-    userId: string; 
-    expiresAt: Date;
-  }) {
-    return db.transaction(async (tx) => {
-      const [revoked] = await tx
-        .update(refreshTokens)
-        .set({ revokedAt: new Date() })
-        .where(and(eq(refreshTokens.tokenHash, oldTokenHash), isNull(refreshTokens.revokedAt)))
-        .returning()
-      
-      if (!revoked) {
-        throw new UnauthorizedError("Refresh token reuse detected");
-      }
-
-      const [created] = await tx
-        .insert(refreshTokens)
-        .values(newToken)
-        .returning();
-      return created;
-    })
   }
 }
