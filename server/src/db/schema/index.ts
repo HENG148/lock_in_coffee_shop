@@ -7,4 +7,4 @@ export * from "./variant-options.schema.js";
 export * from "./products-variant-group.schema.js"
 export * from "./addons.schema.js";
 export * from "./products-addons.schema.js";
-// export * from "./"
+export * from "./inventory-items.schema.js"

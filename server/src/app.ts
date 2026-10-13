@@ -5,6 +5,8 @@ import cors from 'cors'
 import { env } from "./configs/env.js";
 import { errorHandler, notFoundHandler } from "./middleware/error-handle.middleware.js";
 import routes from '../src/routes/index.routes.js'
+import { db } from "./db/client.js";
+import { sql } from "drizzle-orm";
 
 export function App() {
   const app = express();
@@ -14,7 +16,14 @@ export function App() {
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true }));
   app.use("/api/v1", routes);
-  app.get("/health", (_req, res) => res.json({ status: "ok" }));
+  app.get('/health/db', async (_req, res, next) => {
+    try {
+      await db.execute(sql`select 1`);
+      res.json({ status: 'ok', db: 'connected' });
+    } catch (err) {
+      next(err);
+    }
+  })
   app.get("/", (_req, res) => res.json({message: "Hello Backend"}))
   app.use(notFoundHandler);
   app.use(errorHandler);
