@@ -8,3 +8,5 @@ export * from "./products-variant-group.schema.js"
 export * from "./addons.schema.js";
 export * from "./products-addons.schema.js";
 export * from "./inventory-items.schema.js"
+export * from "./inventory-transactions.schema.js"
+export * from "./supplier.schema.js"
